@@ -1,7 +1,7 @@
 # Cloudcheck-SDK-Android-Library
 
 
-Add the cloudcheck aar to your libs folder. If you need to use the debug endpoints then use the debug version.
+Add the cloudcheck aar to your lib folder.
 
 You'll need the following dependencies in your gradle
 
