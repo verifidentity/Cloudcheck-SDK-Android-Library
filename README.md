@@ -69,7 +69,8 @@ override fun onCreate(savedInstanceState: Bundle?) {
     CloudcheckSdk.initialize("YOUR_API_KEY", "YOUR_API_SECRET")
 
     findViewById<Button>(R.id.start_button).setOnClickListener {
-        val intent = CloudcheckSdk.liveIntent(this, CCLiveRequest(UUID.randomUUID().toString()))
+        val config = Config("This is an optional customisable complete message")
+        val intent = CloudcheckSdk.liveIntent(this, CCLiveRequest(UUID.randomUUID().toString()), config)
         startActivityForResult(intent, 1)
     }
 }
