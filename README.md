@@ -93,3 +93,42 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 }
 
 ```
+
+To link the verification and the live check the verification reference must be captured from the verification response and passed to the live check request
+
+```(kotlin)
+val name = CCName("John",null, "Johnny")
+
+val address = CCAddress("123 John St", null, "0101", "Johnston")
+
+val driversLicence = CCNewZealandDriversLicence("AB000111", "002")
+
+val dateOfBirth = CCDate("1994-04-04")
+
+val details = CCVerifyDetails(name = name, address = address, dateOfBirth = dateOfBirth, newZealandDriversLicence = driversLicence)
+
+val request = CCVerifyRequest(details, UUID.randomUUID().toString(), "Yes")
+
+CloudcheckSdk.cloudcheckApi.verify(request, "my-user").subscribeOn(Schedulers.io())
+    .observeOn(AndroidSchedulers.mainThread())
+    .subscribe(object : SingleObserver<VerifyResponse> {
+        override fun onSuccess(t: VerifyResponse) {
+            Log.d(TAG, "onSuccess: ${t}")
+            
+            findViewById<Button>(R.id.start_button).setOnClickListener {
+                val config = Config("This is an optional customisable complete message")
+                val intent = CloudcheckSdk.liveIntent(this, CCLiveRequest(UUID.randomUUID().toString(), t.verification.verificationReference), config)
+                startActivityForResult(intent, 1)
+            }
+        }
+
+        override fun onSubscribe(d: Disposable) {
+            Log.d("TAG", "onSub")
+        }
+
+        override fun onError(e: Throwable) {
+            Log.e("TAG", "error", e)
+        }
+
+    })
+```
